@@ -67,6 +67,34 @@ Verified facts (2026-07-21):
    a dev-time device. Track the eventual published engines version via
    `scripts/bump-engines.ts` once the engines PR merges.
 
+## Status (2026-07-21) — merge done, PR's own suites green
+
+Executed locally at `/home/user/prisma-engines`, branch `postgis-v7` = engines main
+`e922089b` + merge of PR 5797 head `6f45c313` (merge commit; zero conflicts).
+
+Test results (`CLICOLOR_FORCE=1` required — the expect-test error snapshots embed
+ANSI colors, and a non-TTY environment otherwise fails ~580 pre-existing negative
+tests identically on unmodified main):
+
+- `psl` (217 validation fixtures incl. both new postgis ones + 1063 datamodel
+  tests), `prisma-fmt`, `dmmf` (incl. `geometry_fields_in_datamodel_and_schema_dmmf`),
+  `query-structure` (all GeoJSON filter units), `core-tests` (all geometry
+  graph-build tests), `query-compiler` (snapshot suite incl. all 15 geometry
+  snapshots): **all green**.
+- `request-handlers --all-features`: **28/28 green** (includes the PR's new JSON
+  protocol adapter geometry tests; without `--all-features` the whole target fails
+  on main too because the fixture schema needs the `mongodb` feature).
+- `sql-query-builder`, `schema`, `query-core`: green.
+- `quaint`: DB-free units green; 651 tests require live databases
+  (`TEST_MYSQL` etc.) and fail identically on unmodified main — not PR-related,
+  and the PR adds no quaint tests.
+- Schema-engine PostGIS introspection/migration tests: **not run** — they need a
+  live PostGIS database and this environment has no Docker. Must be covered in an
+  environment with `postgis/postgis` available.
+
+Remaining from this task: Wasm artifact builds (`wasm-bindgen` 0.2.105 CLI and
+binaryen installed), prisma-side validate smoke test, schema-engine binary build.
+
 ## Acceptance criteria
 
 - All engines test suites touched by the PR pass on top of engines main.
