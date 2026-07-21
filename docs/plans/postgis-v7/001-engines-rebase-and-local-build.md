@@ -99,7 +99,7 @@ Artifacts built from the merge commit `2654061464` (reproducible reference):
 - `query-compiler/query-compiler-wasm/pkg` — all 5 provider variants, `fast` and
   `small` profiles, via `make build-qc-wasm`.
 - `target/release/schema-engine` — native binary (`cargo build --release -p
-  schema-engine-cli`), reports version `2654061464...`.
+schema-engine-cli`), reports version `2654061464...`.
 
 Smoke test against the locally built schema Wasm: a schema with
 `position Geometry? @db.Geometry(Point, 4326)` and

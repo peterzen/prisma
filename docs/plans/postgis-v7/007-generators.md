@@ -33,7 +33,7 @@ DMMF actually contains geometry scalars.
   own `geometry_fields_in_datamodel_and_schema_dmmf` test. The prisma-side PR's
   `ref.type.startsWith('geometry(')` sniffing therefore never matches and must be
   replaced with `ref.location === 'scalar' && (ref.type === 'Geometry' ||
-  ref.type === 'Geography')`. Centralize the check in one helper
+ref.type === 'Geography')`. Centralize the check in one helper
   (`isGeometryScalarTypeRef`) used by all call sites, and decide how `Geography`
   maps on the client type surface (the prisma-side PR has no `Geography` handling
   at all — likely it shares the GeoJSON `Geometry` runtime types).
