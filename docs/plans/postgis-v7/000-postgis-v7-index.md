@@ -140,6 +140,28 @@ Note that three engine artifacts are affected, not two:
     must key on `type === 'Geometry' || type === 'Geography'` at scalar location
     (task 007), including a `Geography` story the prisma-side PR does not have.
 
+## Implementation Status (2026-07-21)
+
+The port is implemented on this branch:
+
+- Squash-port of the original PR (56 files, minus drive-by edits), then v7
+  corrections as separate commits (generator detection via `Geometry`/`Geography`
+  DMMF names, functional schema rewritten to the attribute form, postgis suite
+  gated to the `js_pg_postgis` flavor only).
+- Local test results (all of the PR's own runnable suites): `adapter-pg`
+  93 passed / 1 skipped (WKB, spatial-optimizer, conversion), `client-engine-runtime`
+  209 passed, client `deserializeRawResults` 14 passed, generator suites
+  18 + 39 passed, full root `pnpm build` green.
+- With locally built engines wired in (dev-only, not committed): `prisma generate`
+  works for **both** generators on a `Geometry`/`Geography` schema, and a strict
+  consumer typechecks create with GeoJSON input, `near` filter,
+  `distanceFrom: { point, direction }` orderBy, and `Prisma.Geometry` outputs.
+- Not runnable here (needs Docker/PostGIS + local engines): the functional postgis
+  suite execution and schema-engine DB suites — next environment with Docker.
+- The engines gate stands: CI cannot exercise geometry schemas until
+  prisma-engines#5797 (rebased: conflict-free, all suites green) is merged and a
+  published engines version is pinned.
+
 ## Task Summary
 
 | ID  | Task                                                                                                | Priority | Status  | Dependencies |
