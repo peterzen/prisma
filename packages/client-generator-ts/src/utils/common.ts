@@ -11,10 +11,13 @@ export const GraphQLScalarToJSTypeTable = {
   Bytes: 'runtime.Bytes',
   Decimal: ['runtime.Decimal', 'runtime.DecimalJsLike', 'number', 'string'],
   BigInt: ['bigint', 'number'],
+  Geometry: 'runtime.Geometry',
+  Geography: 'runtime.Geometry',
 }
 
 export const JSOutputTypeToInputType: Record<string, string | undefined> = {
   JsonValue: 'InputJsonValue',
+  Geometry: 'InputGeometry',
 }
 
 export const JSTypeToGraphQLType = {

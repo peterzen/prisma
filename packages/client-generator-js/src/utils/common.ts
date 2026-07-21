@@ -4,6 +4,8 @@ export const needNamespace = {
   Json: 'JsonValue',
   Decimal: 'Decimal',
   Bytes: 'Bytes',
+  Geometry: 'Geometry',
+  Geography: 'Geometry',
 }
 
 export function needsNamespace(field: DMMF.Field): boolean {
@@ -12,7 +14,7 @@ export function needsNamespace(field: DMMF.Field): boolean {
   }
 
   if (field.kind === 'scalar') {
-    return field.type === 'Json' || field.type === 'Decimal' || field.type === 'Bytes'
+    return Object.prototype.hasOwnProperty.call(needNamespace, field.type)
   }
   return false
 }
@@ -30,10 +32,13 @@ export const GraphQLScalarToJSTypeTable = {
   Bytes: 'Bytes',
   Decimal: ['Decimal', 'DecimalJsLike', 'number', 'string'],
   BigInt: ['bigint', 'number'],
+  Geometry: 'Geometry',
+  Geography: 'Geometry',
 }
 
 export const JSOutputTypeToInputType = {
   JsonValue: 'InputJsonValue',
+  Geometry: 'InputGeometry',
 }
 
 export const JSTypeToGraphQLType = {
