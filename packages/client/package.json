@@ -204,7 +204,7 @@
     "@prisma/migrate": "workspace:*",
     "@prisma/param-graph": "workspace:*",
     "@prisma/param-graph-builder": "workspace:*",
-    "@prisma/query-compiler-wasm": "file:/home/user/prisma-engines/query-compiler/query-compiler-wasm/pkg",
+    "@prisma/query-compiler-wasm": "7.9.0-1.e922089b7d7502aff4249d5da3420f6fa55fc6ad",
     "@prisma/query-plan-executor": "workspace:*",
     "@prisma/sqlcommenter": "workspace:*",
     "@prisma/sqlcommenter-trace-context": "workspace:*",
