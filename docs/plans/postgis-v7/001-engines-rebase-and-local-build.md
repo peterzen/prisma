@@ -92,8 +92,25 @@ tests identically on unmodified main):
   live PostGIS database and this environment has no Docker. Must be covered in an
   environment with `postgis/postgis` available.
 
-Remaining from this task: Wasm artifact builds (`wasm-bindgen` 0.2.105 CLI and
-binaryen installed), prisma-side validate smoke test, schema-engine binary build.
+Artifacts built from the merge commit `2654061464` (reproducible reference):
+
+- `target/prisma-schema-wasm` — node package via `make build-schema-wasm`
+  (wasm-bindgen CLI 0.2.105, binaryen/wasm-opt 108).
+- `query-compiler/query-compiler-wasm/pkg` — all 5 provider variants, `fast` and
+  `small` profiles, via `make build-qc-wasm`.
+- `target/release/schema-engine` — native binary (`cargo build --release -p
+  schema-engine-cli`), reports version `2654061464...`.
+
+Smoke test against the locally built schema Wasm: a schema with
+`position Geometry? @db.Geometry(Point, 4326)` and
+`region Geography? @db.Geography(Polygon, 4326)` **validates**; the prisma-side
+PR's inline `Geometry(Point, 4326)?` form is rejected with a parse error,
+confirming index item 13 and the task 008 schema rewrite.
+
+Still open from this task: the `db push` smoke test against a real PostGIS
+container and the schema-engine PostGIS test suites (blocked on a Docker-capable
+environment), and the `bytes` vs `geometry` placeholder decision (step 3), which
+should be settled together with prisma-side task 004.
 
 ## Acceptance criteria
 
