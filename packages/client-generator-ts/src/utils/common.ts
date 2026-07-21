@@ -1,9 +1,3 @@
-import type * as DMMF from '@prisma/dmmf'
-
-export function isGeometryScalarTypeRef(ref: Pick<DMMF.OutputTypeRef, 'location' | 'type'>): boolean {
-  return ref.location === 'scalar' && ref.type.startsWith('geometry(')
-}
-
 export const GraphQLScalarToJSTypeTable = {
   String: 'string',
   Int: 'number',
@@ -18,6 +12,7 @@ export const GraphQLScalarToJSTypeTable = {
   Decimal: ['runtime.Decimal', 'runtime.DecimalJsLike', 'number', 'string'],
   BigInt: ['bigint', 'number'],
   Geometry: 'runtime.Geometry',
+  Geography: 'runtime.Geometry',
 }
 
 export const JSOutputTypeToInputType: Record<string, string | undefined> = {

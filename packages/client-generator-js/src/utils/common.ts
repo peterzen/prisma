@@ -1,17 +1,11 @@
 import type * as DMMF from '@prisma/dmmf'
 
-export function isGeometryScalarTypeRef(ref: Pick<DMMF.OutputTypeRef, 'location' | 'type'>): boolean {
-  return ref.location === 'scalar' && ref.type.startsWith('geometry(')
-}
-
 export const needNamespace = {
   Json: 'JsonValue',
   Decimal: 'Decimal',
   Bytes: 'Bytes',
-  Point: 'Point',
-  LineString: 'LineString',
-  Polygon: 'Polygon',
   Geometry: 'Geometry',
+  Geography: 'Geometry',
 }
 
 export function needsNamespace(field: DMMF.Field): boolean {
@@ -38,10 +32,8 @@ export const GraphQLScalarToJSTypeTable = {
   Bytes: 'Bytes',
   Decimal: ['Decimal', 'DecimalJsLike', 'number', 'string'],
   BigInt: ['bigint', 'number'],
-  Point: 'Point',
-  LineString: 'LineString',
-  Polygon: 'Polygon',
   Geometry: 'Geometry',
+  Geography: 'Geometry',
 }
 
 export const JSOutputTypeToInputType = {
