@@ -56,6 +56,12 @@ config)`, `DbPushIgnoreWarningsWithFlagError`) — but signatures must be re-che
   `output` path — match current functional-test schema conventions (the harness now
   injects generator blocks; compare with a freshly written suite's `_schema.ts` and
   use `idForProvider` where applicable).
+- **Schema syntax fix (resolved 2026-07-21)**: the engines implementation parses
+  `position Geometry? @db.Geometry(Point, 4326)` — not the inline
+  `Geometry(Point, 4326)?` the prisma-side PR's `_schema.ts` uses, which does not
+  parse. Rewrite every model in the ported `_schema.ts` to the scalar-plus-native-
+  attribute form (and consider a `Geography` model for SRID-aware geodetic
+  coverage, since the engines side treats it as a distinct first-class type).
 - Engines prerequisites: local Wasm + `PRISMA_SCHEMA_ENGINE_BINARY` (task 001), and
   a running `docker compose -f docker/postgis-test.yml up -d`.
 

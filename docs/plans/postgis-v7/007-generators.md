@@ -26,13 +26,17 @@ DMMF actually contains geometry scalars.
 - **Merge drift**: main's `common.ts` gained `PrismaClientConstructorArgs` (#29592)
   and the `XOR ... & object` fix (#29735) since the PR's base. Auto-merge handles it;
   regenerate all generator snapshots afterwards.
-- **DMMF detection is string sniffing**: `ref.location === 'scalar' &&
-ref.type.startsWith('geometry(')`. Verify against task 001's DMMF exactly what the
-  scalar type name is (`geometry(Point, 4326)`? lowercase? spacing?) and write a
-  DMMF-fixture test that pins it. Centralize the check — the PR defines
-  `isGeometryScalarTypeRef` in `utils/common.ts` but still inlines the prefix check
-  in `Input.ts`/`Output.ts`; use the helper everywhere so the format is asserted in
-  one place.
+- **DMMF detection must change — resolved 2026-07-21.** The adapted engines branch
+  renders `field_type: "Geometry"` / `"Geography"` (plain scalar names; native args
+  live in `native_type`, e.g. `["Point", "4326"]`), and query-schema DMMF output
+  types are also plain `"Geometry"`/`"Geography"` — confirmed by the engines PR's
+  own `geometry_fields_in_datamodel_and_schema_dmmf` test. The prisma-side PR's
+  `ref.type.startsWith('geometry(')` sniffing therefore never matches and must be
+  replaced with `ref.location === 'scalar' && (ref.type === 'Geometry' ||
+  ref.type === 'Geography')`. Centralize the check in one helper
+  (`isGeometryScalarTypeRef`) used by all call sites, and decide how `Geography`
+  maps on the client type surface (the prisma-side PR has no `Geography` handling
+  at all — likely it shares the GeoJSON `Geometry` runtime types).
 - The TS generator emits four `PrismaClientOptions` types and keeps `@ts-nocheck` in
   `prismaNamespace.ts` — union-order rules from `AGENTS.md` are unaffected by this
   task, but regenerated snapshots will include the geometry exports; review the

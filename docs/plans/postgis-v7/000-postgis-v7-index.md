@@ -21,6 +21,11 @@ What the original PR delivers:
 
 ## Analysis Snapshot (2026-07-21)
 
+Upstream status: prisma/prisma#29365 was **closed by maintainers** while clearing the
+PR backlog ahead of the codebase's move to a v7 branch — explicitly because it
+depends on the unmerged prisma-engines#5797 and touches 60+ files, not on the merits
+of the feature. This plan is the revival of that work against v7.
+
 All refs below were fetched and diffed locally; numbers are from `git diff --stat`.
 
 | Item                                                       | Value                                                                  |
@@ -120,6 +125,20 @@ Note that three engine artifacts are affected, not two:
     `Point | LineString | Polygon`, while the client's `isGeometry` accepts `Multi*`
     and `GeometryCollection`. Resolve deliberately (task 002): either extend the WKB
     layer to Multi\*/collections or restrict input validation to what round-trips.
+13. **PSL syntax and DMMF rendering differ from what the prisma-side PR assumes**
+    (verified against the adapted engines branch, 2026-07-21). The engines PR's
+    syntax is `position Geometry? @db.Geometry(Point, 4326)` — first-class
+    `Geometry`/`Geography` scalar types paired with native-type attributes — **not**
+    the inline `Geometry(Point, 4326)?` form used by the prisma-side PR's functional
+    test schema (which does not parse). DMMF renders `field_type: "Geometry"` /
+    `"Geography"` with the native args in `native_type` (e.g.
+    `["Point", "4326"]`), and the query-schema DMMF output types are also plain
+    `"Geometry"`/`"Geography"` (per the engines PR's own
+    `geometry_fields_in_datamodel_and_schema_dmmf` test). Consequences: the
+    functional test schema must switch to the attribute form (task 008), and the
+    generators' `type.startsWith('geometry(')` sniffing will never match — detection
+    must key on `type === 'Geometry' || type === 'Geography'` at scalar location
+    (task 007), including a `Geography` story the prisma-side PR does not have.
 
 ## Task Summary
 
